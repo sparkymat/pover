@@ -1,8 +1,9 @@
 require_relative './pover'
 
 scene do
-  circle [0, 0], 1, 'Green'
-  circle [2, 2], 1, 'White'
-  circle [0, 2], 1, 'Blue'
-  circle [2, 0], 1, 'Red'
+  line [-20, 0], [20, 0]
+  line [0, -20], [0, 20]
+
+  circle [3, 3], 1, 'Red'
+  rectangle [-1, -1], [1, 3], 'Blue'
 end

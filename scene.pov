@@ -7,33 +7,33 @@
         look_at  <0, 0, 0>
       }
 
-            sphere {
-        <0, 0, 0>, 1
-        texture {
-          pigment { color Green }
-        }
-      }
-
-      sphere {
-        <2, 2, 0>, 1
+            cylinder {
+        <-20, 0, 0>, <20, 0, 0>, 0.1
         texture {
           pigment { color White }
         }
       }
 
-      sphere {
-        <0, 2, 0>, 1
+      cylinder {
+        <0, -20, 0>, <0, 20, 0>, 0.1
         texture {
-          pigment { color Blue }
+          pigment { color White }
         }
       }
 
-      sphere {
-        <2, 0, 0>, 1
+      cylinder {
+        <3, 3, 0>, <3, 3, 1>, 1
         texture {
           pigment { color Red }
         }
       }
 
+      box {
+        <-1, -1, 0>, <1, 3, 0>
+        texture {
+          pigment { color Blue }
+        }
+      }
 
-      light_source { <0, 20, -20> color White}
+
+      light_source { <0, 0, -20> color White}

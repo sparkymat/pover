@@ -22,6 +22,36 @@ class Light
   attr_accessor :position
 end
 
+class Box
+  attr_accessor :corner1, :corner2, :color
+
+  def render
+    <<-EOS
+      box {
+        #{@corner1.render}, #{@corner2.render}
+        texture {
+          pigment { color #{@color} }
+        }
+      }
+    EOS
+  end
+end
+
+class Cylinder
+  attr_accessor :center1, :center2, :radius, :color
+
+  def render
+    <<-EOS
+      cylinder {
+        #{@center1.render}, #{@center2.render}, #{@radius}
+        texture {
+          pigment { color #{@color} }
+        }
+      }
+    EOS
+  end
+end
+
 class Sphere
   attr_accessor :center, :radius, :color
 
@@ -39,7 +69,7 @@ end
 
 class Scene
   def initialize
-    @default_fg_color = 'Yellow'
+    @default_fg_color = 'White'
     @camera = Camera.new
     @camera.position = Position.new(x: 0, y: 0, z: -20)
     @camera.lookat = Position.new(x: 0, y: 0, z: 0)
@@ -47,7 +77,7 @@ class Scene
     @objects = []
 
     default_light = Light.new
-    default_light.position = Position.new(x: 0, y: 20, z: -20)
+    default_light.position = Position.new(x: 0, y: 0, z: -20)
     @lights = [
       default_light
     ]
@@ -72,8 +102,37 @@ class Scene
     @objects << s
   end
 
+  def box(corner1, corner2, color = '')
+    b = Box.new
+    b.corner1 = Position.new(x: corner1[0], y: corner1[1], z: corner1[2])
+    b.corner2 = Position.new(x: corner2[0], y: corner2[1], z: corner2[2])
+    b.color = color.nil? || color == '' ? @default_fg_color : color
+    @objects << b
+  end
+
+  def rectangle(corner1, corner2, color = '')
+    corner1[2] ||= 0
+    corner2[2] ||= 0
+    box(corner1, corner2, color)
+  end
+
+  def cylinder(center1, center2, radius, color = '')
+    c = Cylinder.new
+    c.center1 = Position.new(x: center1[0], y: center1[1], z: center1[2])
+    c.center2 = Position.new(x: center2[0], y: center2[1], z: center2[2])
+    c.radius = radius
+    c.color = color.nil? || color == '' ? @default_fg_color : color
+    @objects << c
+  end
+
   def circle(center, radius, color = '')
-    sphere(center, radius, color)
+    other_center = center.dup
+    other_center[2] = (center[2] || 0) + 1
+    cylinder(center, other_center, radius, color)
+  end
+
+  def line(start, stop, color = '')
+    cylinder(start, stop, 0.1, color)
   end
 
   def render
