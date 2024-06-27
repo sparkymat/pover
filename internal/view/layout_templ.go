@@ -44,7 +44,7 @@ func Layout(title string, content templ.Component) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><script src=\"/js/uikit.min.js\"></script><script src=\"/js/uikit-icons.min.js\"></script></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><script src=\"/js/uikit.min.js\" type=\"text/javascript\" charset=\"utf-8\"></script><script src=\"/js/uikit-icons.min.js\" type=\"text/javascript\" charset=\"utf-8\"></script><script src=\"/js/ace/ace.js\" type=\"text/javascript\" charset=\"utf-8\"></script><script src=\"/js/ace/theme-twilight.js\" type=\"text/javascript\" charset=\"utf-8\"></script><script src=\"/js/ace/mode-ruby.js\" type=\"text/javascript\" charset=\"utf-8\"></script><script>\n        var editor = ace.edit(\"editor\");\n        editor.setTheme(\"ace/theme/twilight\");\n\n        var RubyMode = ace.require(\"ace/mode/ruby\").Mode;\n        editor.session.setMode(new RubyMode());\n      </script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

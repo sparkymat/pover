@@ -1,9 +1,13 @@
 body {
-  font-family: 'PT Sans', serif;
+  font-family: "PT Sans", serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Monsterrat', serif;
+  font-family: "Montserrat", serif;
   font-weight: 300;
   text-transform: uppercase;
+}
+
+#editor {
+  font-size: 1.1rem;
 }
