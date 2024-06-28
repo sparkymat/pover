@@ -23,7 +23,7 @@ func Home() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"uk-flex uk-background-muted uk-height-viewport uk-padding-small\" style=\"gap: 15px;\"><div class=\"uk-flex-1 uk-background-secondary\" id=\"editor\"></div><div class=\"uk-flex-1 uk-background-default\"></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"uk-flex uk-flex-column uk-background-muted uk-height-viewport uk-padding-small\" style=\"gap: 15px;\"><div class=\"uk-flex\"><button class=\"uk-button uk-button-default\" hx-on:click=\"editor.setValue(&#39;&#39;)\" hx-confirm=\"Are you sure you want to clear?\">Clear</button><div class=\"uk-flex-1\"></div><button class=\"uk-button uk-button-primary\" hx-post=\"/generate_image\" hx-vals=\"js:{code: editor.getValue()}\" hx-target=\"#image\">Save</button></div><div class=\"uk-flex-1 uk-flex\" style=\"gap: 15px;\"><div class=\"uk-flex-1 uk-background-secondary\" id=\"editor\"></div><div class=\"uk-flex-1 uk-background-default\" id=\"image\"></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

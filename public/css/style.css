@@ -11,3 +11,8 @@ h1, h2, h3, h4, h5, h6 {
 #editor {
   font-size: 1.1rem;
 }
+
+#image img {
+  width: 100%;
+  object-fit: cover;
+}

@@ -23,11 +23,11 @@ templ Layout(title string, content templ.Component) {
 			<script src="/js/ace/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
 			<script src="/js/ace/mode-ruby.js" type="text/javascript" charset="utf-8"></script>
 			<script>
-        var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/twilight");
+        window.editor = ace.edit("editor");
+        window.editor.setTheme("ace/theme/twilight");
 
         var RubyMode = ace.require("ace/mode/ruby").Mode;
-        editor.session.setMode(new RubyMode());
+        window.editor.session.setMode(new RubyMode());
       </script>
 		</body>
 	</html>

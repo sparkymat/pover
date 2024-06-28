@@ -1,8 +1,15 @@
 package view
 
 templ Home() {
-	<div class="uk-flex uk-background-muted uk-height-viewport uk-padding-small" style="gap: 15px;">
-		<div class="uk-flex-1 uk-background-secondary" id="editor"></div>
-		<div class="uk-flex-1 uk-background-default"></div>
+	<div class="uk-flex uk-flex-column uk-background-muted uk-height-viewport uk-padding-small" style="gap: 15px;">
+		<div class="uk-flex">
+			<button class="uk-button uk-button-default" hx-on:click="editor.setValue('')" hx-confirm="Are you sure you want to clear?">Clear</button>
+			<div class="uk-flex-1"></div>
+			<button class="uk-button uk-button-primary" hx-post="/generate_image" hx-vals="js:{code: editor.getValue()}" hx-target="#image">Save</button>
+		</div>
+		<div class="uk-flex-1 uk-flex" style="gap: 15px;">
+			<div class="uk-flex-1 uk-background-secondary" id="editor"></div>
+			<div class="uk-flex-1 uk-background-default" id="image"></div>
+		</div>
 	</div>
 }
