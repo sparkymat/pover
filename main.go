@@ -4,6 +4,7 @@ package main
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/sparkymat/pover/internal/config"
 	"github.com/sparkymat/pover/internal/handler"
@@ -27,8 +28,12 @@ func main() {
 	mux.Handle("GET /{$}", handler.Home())
 	mux.Handle("POST /generate_image", handler.GenerateImage(p))
 
-	err = http.ListenAndServe(":8080", mux)
-	if err != nil {
+	server := &http.Server{
+		Addr:              ":8080",
+		ReadHeaderTimeout: 3 * time.Second,
+	}
+
+	if err = server.ListenAndServe(); err != nil {
 		panic(err)
 	}
 }
