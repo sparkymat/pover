@@ -1,5 +1,3 @@
-Bundler.require
-
 class Position
   attr_reader :x, :y, :z
 
