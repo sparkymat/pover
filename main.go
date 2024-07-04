@@ -3,6 +3,7 @@ package main
 //go:generate go run github.com/a-h/templ/cmd/templ@latest generate
 
 import (
+	_ "embed"
 	"net/http"
 	"time"
 
@@ -11,13 +12,16 @@ import (
 	"github.com/sparkymat/pover/povc"
 )
 
+//go:embed app/pover.rb
+var poverCode []byte
+
 func main() {
 	cfg, err := config.New()
 	if err != nil {
 		panic(err)
 	}
 
-	p := povc.New(cfg)
+	p := povc.New(cfg, poverCode)
 
 	mux := http.NewServeMux()
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("public/css"))))

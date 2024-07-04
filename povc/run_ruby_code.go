@@ -2,6 +2,7 @@ package povc
 
 import (
 	"context"
+	_ "embed"
 	"fmt"
 	"os"
 	"os/exec"
@@ -23,14 +24,9 @@ end
 		return "", fmt.Errorf("failed to write file '%s': %w", codePath, err)
 	}
 
-	poverCode, err := os.ReadFile("app/pover.rb")
-	if err != nil {
-		return "", fmt.Errorf("failed to read file 'app/pover.rb': %w", err)
-	}
-
 	poverPath := filepath.Join(codeDir, "pover.rb")
 
-	if err = os.WriteFile(poverPath, poverCode, 0o644); err != nil {
+	if err = os.WriteFile(poverPath, s.poverCode, 0o644); err != nil {
 		return "", fmt.Errorf("failed to write file '%s': %w", poverPath, err)
 	}
 
