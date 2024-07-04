@@ -1,19 +1,11 @@
 linters:
   enable-all: true
   disable:
-    - deadcode
     - depguard
-    - exhaustivestruct
+    - execinquery
     - exhaustruct
-    - golint
-    - ifshort
-    - interfacer
+    - gomnd
     - ireturn
-    - maligned
-    - nosnakecase
-    - scopelint
-    - structcheck
-    - varcheck
     - varnamelen
 
 linters-settings:

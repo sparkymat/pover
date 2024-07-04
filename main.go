@@ -30,10 +30,12 @@ func main() {
 
 	server := &http.Server{
 		Addr:              ":8080",
+		Handler:           mux,
 		ReadHeaderTimeout: 3 * time.Second,
 	}
 
 	if err = server.ListenAndServe(); err != nil {
 		panic(err)
 	}
+
 }

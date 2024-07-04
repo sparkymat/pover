@@ -19,7 +19,7 @@ scene do
 end
 `, input)
 
-	if err = os.WriteFile(codePath, []byte(wrappedCode), 0644); err != nil {
+	if err = os.WriteFile(codePath, []byte(wrappedCode), 0o644); err != nil {
 		return "", fmt.Errorf("failed to write file '%s': %w", codePath, err)
 	}
 
@@ -30,7 +30,7 @@ end
 
 	poverPath := filepath.Join(codeDir, "pover.rb")
 
-	if err = os.WriteFile(poverPath, poverCode, 0644); err != nil {
+	if err = os.WriteFile(poverPath, poverCode, 0o644); err != nil {
 		return "", fmt.Errorf("failed to write file '%s': %w", poverPath, err)
 	}
 

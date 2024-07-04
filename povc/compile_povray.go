@@ -13,7 +13,7 @@ func (s *Service) runPOVRay(_ context.Context, codeDir string, input string) (st
 
 	codePath := filepath.Join(codeDir, "image.pov")
 
-	if err = os.WriteFile(codePath, []byte(input), 0644); err != nil {
+	if err = os.WriteFile(codePath, []byte(input), 0o644); err != nil {
 		return "", fmt.Errorf("failed to write file '%s': %w", codePath, err)
 	}
 
