@@ -34,19 +34,19 @@ func (s *Service) Compile(ctx context.Context, rubyCode string) (string, error) 
 
 	outimagePath := filepath.Join(s.cfg.StorageFolder(), randomUUID+".png")
 
-	inImage, err := os.Open(inImagePath)
+	inImage, err := os.Open(inImagePath) //nolint:gosec
 	if err != nil {
 		return "", fmt.Errorf("failed to open image file: %w", err)
 	}
 
-	defer inImage.Close()
+	defer inImage.Close() //nolint:errcheck
 
-	outImage, err := os.Create(outimagePath)
+	outImage, err := os.Create(outimagePath) //nolint:gosec
 	if err != nil {
 		return "", fmt.Errorf("failed to create output image file: %w", err)
 	}
 
-	defer outImage.Close()
+	defer outImage.Close() //nolint:errcheck
 
 	if _, err := io.Copy(outImage, inImage); err != nil {
 		return "", fmt.Errorf("failed to copy image file: %w", err)

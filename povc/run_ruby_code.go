@@ -2,7 +2,6 @@ package povc
 
 import (
 	"context"
-	_ "embed"
 	"fmt"
 	"os"
 	"os/exec"
@@ -20,13 +19,13 @@ scene do
 end
 `, input)
 
-	if err = os.WriteFile(codePath, []byte(wrappedCode), 0o644); err != nil {
+	if err = os.WriteFile(codePath, []byte(wrappedCode), 0o600); err != nil { //nolint:mnd
 		return "", fmt.Errorf("failed to write file '%s': %w", codePath, err)
 	}
 
 	poverPath := filepath.Join(codeDir, "pover.rb")
 
-	if err = os.WriteFile(poverPath, s.poverCode, 0o644); err != nil {
+	if err = os.WriteFile(poverPath, s.poverCode, 0o600); err != nil { //nolint:mnd
 		return "", fmt.Errorf("failed to write file '%s': %w", poverPath, err)
 	}
 
@@ -35,7 +34,8 @@ end
 
 	output, err := cmd.Output()
 	if err != nil {
-		fmt.Printf("output=%s\n", output)
+		fmt.Printf("output=%s\n", output) //nolint:forbidigo
+
 		return "", fmt.Errorf("failed to run ruby: %w", err)
 	}
 

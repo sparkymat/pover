@@ -12,7 +12,13 @@ type POVService interface {
 
 func GenerateImage(p POVService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
+		err := r.ParseForm()
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			_, _ = w.Write([]byte("bad request"))
+
+			return
+		}
 
 		code := r.Form.Get("code")
 
@@ -25,6 +31,6 @@ func GenerateImage(p POVService) http.HandlerFunc {
 
 		response := fmt.Sprintf("<img src='/images/%s' />", imageFilename)
 
-		w.Write([]byte(response))
+		_, _ = w.Write([]byte(response))
 	}
 }

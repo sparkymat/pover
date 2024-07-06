@@ -15,8 +15,9 @@ func Home() http.HandlerFunc {
 
 		err := document.Render(r.Context(), w)
 		if err != nil {
-			fmt.Printf("err: %v", err)
+			fmt.Printf("err: %v", err) //nolint:forbidigo
 			w.WriteHeader(http.StatusInternalServerError)
+
 			return
 		}
 	}

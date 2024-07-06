@@ -60,7 +60,7 @@ func main() {
 	server := &http.Server{
 		Addr:              ":8080",
 		Handler:           mux,
-		ReadHeaderTimeout: 3 * time.Second,
+		ReadHeaderTimeout: 3 * time.Second, //nolint:mnd
 	}
 
 	if err = server.ListenAndServe(); err != nil {

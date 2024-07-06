@@ -6,6 +6,7 @@ linters:
     - exhaustruct
     - gomnd
     - ireturn
+    - stylecheck
     - varnamelen
 
 linters-settings:
@@ -63,6 +64,8 @@ linters-settings:
       - name: string-of-int           
       - name: early-return            
       - name: unconditional-recursion 
+      - name: package-comments
+        disabled: true
       - name: identical-branches      
       - name: unexported-naming       
       - name: nested-structs          

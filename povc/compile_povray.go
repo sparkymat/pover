@@ -8,12 +8,12 @@ import (
 	"path/filepath"
 )
 
-func (s *Service) runPOVRay(_ context.Context, codeDir string, input string) (string, error) {
+func (*Service) runPOVRay(_ context.Context, codeDir string, input string) (string, error) {
 	var err error
 
 	codePath := filepath.Join(codeDir, "image.pov")
 
-	if err = os.WriteFile(codePath, []byte(input), 0o644); err != nil {
+	if err = os.WriteFile(codePath, []byte(input), 0o600); err != nil { //nolint:mnd
 		return "", fmt.Errorf("failed to write file '%s': %w", codePath, err)
 	}
 
@@ -22,7 +22,8 @@ func (s *Service) runPOVRay(_ context.Context, codeDir string, input string) (st
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("output: %s\n", output)
+		fmt.Printf("output: %s\n", output) //nolint:forbidigo
+
 		return "", fmt.Errorf("failed to run povray: %w", err)
 	}
 
