@@ -20,8 +20,4 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=builder /app/pover /bin/pover
 
-WORKDIR /app
-COPY public /app/public
-COPY app /app/app
-
 CMD ["/bin/pover"]
