@@ -1,0 +1,30 @@
+# .goreleaser.yaml
+dockers:
+  - image_templates:
+    - 'sparkymat/pover:{{ .Tag }}-amd64'
+    use: buildx
+    build_flag_templates:
+    - "--pull"
+    - "--platform=linux/amd64"
+  - image_templates:
+    - 'sparkymat/pover:{{ .Tag }}-arm64'
+    use: buildx
+    build_flag_templates:
+    - "--pull"
+    - "--platform=linux/arm64"
+    goarch: arm64
+  - image_templates:
+    - 'sparkymat/pover:{{ .Tag }}-darwin-arm64'
+    use: buildx
+    build_flag_templates:
+    - "--pull"
+    - "--platform=darwin/arm64"
+    goarch: arm64
+    goos: darwin
+docker_manifests:
+- name_template: 'sparkymat/pover:{{ .Tag }}'
+  image_templates:
+  - 'sparkymat/pover:{{ .Tag }}-amd64'
+  - 'sparkymat/pover:{{ .Tag }}-arm64'
+  - 'sparkymat/pover:{{ .Tag }}-darwin-arm64'
+  
