@@ -6,6 +6,7 @@ import (
 	"embed"
 	"io/fs"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/sparkymat/pover/internal/config"
@@ -28,6 +29,10 @@ var poverCode []byte
 func main() {
 	cfg, err := config.New()
 	if err != nil {
+		panic(err)
+	}
+
+	if err = os.MkdirAll(cfg.StorageFolder(), 0o750); err != nil { //nolint:mnd
 		panic(err)
 	}
 
