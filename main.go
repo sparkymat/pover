@@ -11,10 +11,9 @@ import (
 
 	"github.com/sparkymat/pover/internal/config"
 	"github.com/sparkymat/pover/internal/handler"
+	logpkg "github.com/sparkymat/pover/log"
 	"github.com/sparkymat/pover/middleware"
 	"github.com/sparkymat/pover/povc"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 //go:embed public/css
@@ -35,19 +34,12 @@ func main() {
 		os.Exit(exitCode)
 	}()
 
-	logConfig := zap.NewDevelopmentConfig()
-	logConfig.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
-	logConfig.DisableCaller = true
-	logConfig.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
-
-	logger, err := logConfig.Build()
+	logger, log, err := logpkg.Init()
 	if err != nil {
 		panic(err)
 	}
 
 	defer logger.Sync()
-
-	log := logger.Sugar()
 
 	log.Info("Starting pover")
 
@@ -97,19 +89,23 @@ func main() {
 		return
 	}
 
-	mux := http.NewServeMux()
-	mux.Handle("/css/",
-		middleware.Wrap(
-			http.StripPrefix("/css/", http.FileServer(http.FS(cssFolder))),
-			middleware.Logger,
-		),
-	)
-	mux.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.FS(jsFolder))))
-	mux.Handle("/fonts/", http.StripPrefix("/fonts/", http.FileServer(http.FS(fontsFolder))))
-	mux.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir(cfg.StorageFolder()))))
+	middlewares := []middleware.Middleware{
+		middleware.LogInjector(log), // note: This has to be the first one
+		middleware.Logger,
+	}
 
-	mux.Handle("GET /{$}", handler.Home())
-	mux.Handle("POST /generate_image", handler.GenerateImage(p))
+	wrap := func(h http.Handler) http.Handler {
+		return middleware.Wrap(h, middlewares...)
+	}
+
+	mux := http.NewServeMux()
+	mux.Handle("/css/", wrap(http.StripPrefix("/css/", http.FileServer(http.FS(cssFolder)))))
+	mux.Handle("/js/", wrap(http.StripPrefix("/js/", http.FileServer(http.FS(jsFolder)))))
+	mux.Handle("/fonts/", wrap(http.StripPrefix("/fonts/", http.FileServer(http.FS(fontsFolder)))))
+	mux.Handle("/images/", wrap(http.StripPrefix("/images/", http.FileServer(http.Dir(cfg.StorageFolder())))))
+
+	mux.Handle("GET /{$}", wrap(handler.Home()))
+	mux.Handle("POST /generate_image", wrap(handler.GenerateImage(p)))
 
 	server := &http.Server{
 		Addr:              ":8080",

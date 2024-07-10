@@ -5,10 +5,10 @@ import (
 )
 
 func Wrap(handler http.Handler, middlewareList ...Middleware) http.Handler {
-	firstMiddleware := middlewareList[0]
-	restMiddleware := middlewareList[1:]
+	lastMiddleware := middlewareList[len(middlewareList)-1]
+	restMiddleware := middlewareList[:len(middlewareList)-1]
 
-	wrappedHandler := firstMiddleware(handler)
+	wrappedHandler := lastMiddleware(handler)
 
 	if len(restMiddleware) == 0 {
 		return wrappedHandler
