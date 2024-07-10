@@ -12,6 +12,8 @@ import (
 	"github.com/sparkymat/pover/internal/config"
 	"github.com/sparkymat/pover/internal/handler"
 	"github.com/sparkymat/pover/povc"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 //go:embed public/css
@@ -27,30 +29,71 @@ var publicFontsFolder embed.FS
 var poverCode []byte
 
 func main() {
-	cfg, err := config.New()
+	exitCode := 0
+	defer func() {
+		os.Exit(exitCode)
+	}()
+
+	logConfig := zap.NewDevelopmentConfig()
+	logConfig.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
+	logConfig.DisableCaller = true
+	logConfig.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+
+	logger, err := logConfig.Build()
 	if err != nil {
 		panic(err)
 	}
 
+	defer logger.Sync()
+
+	log := logger.Sugar()
+
+	log.Info("Starting pover")
+
+	cfg, err := config.New()
+	if err != nil {
+		log.Errorf("error loading configuration: %v", err)
+
+		exitCode = 1
+
+		return
+	}
+
 	if err = os.MkdirAll(cfg.StorageFolder(), 0o750); err != nil { //nolint:mnd
-		panic(err)
+		log.Errorf("error creating storage folder: %v", err)
+
+		exitCode = 1
+
+		return
 	}
 
 	p := povc.New(cfg, poverCode)
 
 	cssFolder, err := fs.Sub(publicCSSFolder, "public/css")
 	if err != nil {
-		panic(err)
+		log.Errorf("error loading css folder: %v", err)
+
+		exitCode = 1
+
+		return
 	}
 
 	jsFolder, err := fs.Sub(publicJSFolder, "public/js")
 	if err != nil {
-		panic(err)
+		log.Errorf("error loading js folder: %v", err)
+
+		exitCode = 1
+
+		return
 	}
 
 	fontsFolder, err := fs.Sub(publicFontsFolder, "public/fonts")
 	if err != nil {
-		panic(err)
+		log.Errorf("error loading fonts folder: %v", err)
+
+		exitCode = 1
+
+		return
 	}
 
 	mux := http.NewServeMux()
@@ -69,6 +112,10 @@ func main() {
 	}
 
 	if err = server.ListenAndServe(); err != nil {
-		panic(err)
+		log.Errorf("error starting server: %v", err)
+
+		exitCode = 1
+
+		return
 	}
 }
