@@ -12,11 +12,16 @@ type contextKey string
 
 const logKey contextKey = "log"
 
-func Init() (*zap.Logger, *zap.SugaredLogger, error) {
+func Init(debugMode bool) (*zap.Logger, *zap.SugaredLogger, error) {
 	logConfig := zap.NewDevelopmentConfig()
 	logConfig.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 	logConfig.DisableCaller = true
-	logConfig.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+
+	if debugMode {
+		logConfig.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+	} else {
+		logConfig.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+	}
 
 	logger, err := logConfig.Build()
 	if err != nil {

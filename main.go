@@ -34,7 +34,9 @@ func main() {
 		os.Exit(exitCode)
 	}()
 
-	logger, log, err := logpkg.Init()
+	debugMode := os.Getenv("DEBUG") == "1"
+
+	logger, log, err := logpkg.Init(debugMode)
 	if err != nil {
 		panic(err)
 	}

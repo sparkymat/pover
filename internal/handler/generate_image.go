@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+
+	logpkg "github.com/sparkymat/pover/log"
 )
 
 type POVService interface {
@@ -12,8 +14,12 @@ type POVService interface {
 
 func GenerateImage(p POVService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		log := logpkg.FromContext(r.Context())
+
 		err := r.ParseForm()
 		if err != nil {
+			log.Errorf("error parsing form: %v", err)
+
 			w.WriteHeader(http.StatusBadRequest)
 			_, _ = w.Write([]byte("bad request"))
 
@@ -24,6 +30,8 @@ func GenerateImage(p POVService) http.HandlerFunc {
 
 		imageFilename, err := p.Compile(r.Context(), code)
 		if err != nil {
+			log.Errorf("error compiling code: %v", err)
+
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 
 			return

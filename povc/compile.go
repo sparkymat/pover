@@ -8,10 +8,15 @@ import (
 	"path/filepath"
 
 	"github.com/google/uuid"
+	logpkg "github.com/sparkymat/pover/log"
 )
 
 func (s *Service) Compile(ctx context.Context, rubyCode string) (string, error) {
+	log := logpkg.FromContext(ctx)
+
 	randomUUID := uuid.New().String()
+
+	log.Debug("Creating temp dir")
 
 	codeDir, err := os.MkdirTemp("", "pover")
 	if err != nil {
@@ -22,10 +27,14 @@ func (s *Service) Compile(ctx context.Context, rubyCode string) (string, error) 
 		_ = os.RemoveAll(codeDir)
 	}()
 
+	log.Debug("Running ruby code")
+
 	output, err := s.runRubyCode(ctx, codeDir, rubyCode)
 	if err != nil {
 		return "", fmt.Errorf("failed to run ruby code: %w", err)
 	}
+
+	log.Debug("Running POVRay")
 
 	inImagePath, err := s.runPOVRay(ctx, codeDir, output)
 	if err != nil {
@@ -47,6 +56,8 @@ func (s *Service) Compile(ctx context.Context, rubyCode string) (string, error) 
 	}
 
 	defer outImage.Close() //nolint:errcheck
+
+	log.Debug("Copying image file")
 
 	if _, err := io.Copy(outImage, inImage); err != nil {
 		return "", fmt.Errorf("failed to copy image file: %w", err)
