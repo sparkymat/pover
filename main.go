@@ -11,6 +11,7 @@ import (
 
 	"github.com/sparkymat/pover/internal/config"
 	"github.com/sparkymat/pover/internal/handler"
+	"github.com/sparkymat/pover/middleware"
 	"github.com/sparkymat/pover/povc"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -97,7 +98,12 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
-	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.FS(cssFolder))))
+	mux.Handle("/css/",
+		middleware.Wrap(
+			http.StripPrefix("/css/", http.FileServer(http.FS(cssFolder))),
+			middleware.Logger,
+		),
+	)
 	mux.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.FS(jsFolder))))
 	mux.Handle("/fonts/", http.StripPrefix("/fonts/", http.FileServer(http.FS(fontsFolder))))
 	mux.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir(cfg.StorageFolder()))))
